@@ -5,3 +5,8 @@ body{
 #game{
 	border:1px solid white;
 }
+
+#score{
+	color: white;
+	text-align: center;
+}
