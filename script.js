@@ -10,14 +10,17 @@ var player1Pos = [25, height / 2 - 25];
 var player2Pos = [width - 50, height / 2 - 25];
 
 var circlePos = [width /2, height / 2];
-var xdir = -5;
-var ydir = 5;
-game = setInterval(move, 20);
+var xdir = -10;
+var ydir = 10;
+
+game = setInterval(main, 25);
 
 var score = document.getElementById('score');
 var splitScore = score.innerText.split('');
 splitScore[0] = 0;
 splitScore[4] = 0;
+
+var keys = [];
 // preload the players
 window.onload = function (){
 	canvas.width = width;
@@ -30,25 +33,10 @@ window.onload = function (){
 
 // moves the players based on keystrokes
 window.onkeydown = function(e) {
-	switch(e.key){
-		case 'w':
-			if(player1Pos[1] > 0) player1Pos[1] = player1Pos[1] - 20;
-			break;
-			
-		case 's':
-			if(player1Pos[1] < height - rectHeight) player1Pos[1] = player1Pos[1] + 20;
-			break;
-			
-		case 'ArrowUp':
-			if(player2Pos[1] > 0) player2Pos[1] = player2Pos[1] - 20;
-			break;
-			
-		case 'ArrowDown':
-			if(player2Pos[1] < height - rectHeight) player2Pos[1] = player2Pos[1] + 20;
-			break;
-	}
-	
-
+	keys[e.key] = true;
+}
+window.onkeyup = function(e){
+	delete keys[e.key]; 
 }
 
 // draws rectangles 
@@ -67,7 +55,8 @@ function drawCircle(x, y, size){
 	ctx.restore();
 }
 
-function move(){
+function main(){
+	move()
 	clearScreen()
 	drawCircle(circlePos[0], circlePos[1], 10);
 	drawRect(player1Pos[0], player1Pos[1], rectWidth, rectHeight);
@@ -81,25 +70,25 @@ function move(){
 
 function checkCollisions(){
   if((circlePos[0] > player1Pos[0] && circlePos[0] < player1Pos[0] + rectWidth) && (circlePos[1] > player1Pos[1] && circlePos[1] < player1Pos[1] + rectHeight)){
-    xdir = 5;
+    xdir = 10;
   }
   if((circlePos[0] > player2Pos[0] && circlePos[0] < player2Pos[0] + rectWidth) && (circlePos[1] > player2Pos[1] && circlePos[1] < player2Pos[1] + rectHeight)){
-    xdir = -5;
+    xdir = -10;
   }
 	if(circlePos[0] <= 10){
 		splitScore[4] = splitScore[4] + 1;
 		circlePos = [width / 2, height / 2];
-		xdir = 5;
-		ydir = -5;
+		xdir = 10;
+		ydir = -10;
 	}
 	if(circlePos[0] >= width - 10){
 		splitScore[0] = splitScore[0] + 1;
 		circlePos = [width / 2, height / 2];
-		xdir = -5;
-		ydir = 5;
+		xdir = -10;
+		ydir = 10;
 	}
-  if(circlePos[1] > height - 10) ydir = -5
-  if(circlePos[1] < 10) ydir = 5
+  if(circlePos[1] > height - 10) ydir = -10
+  if(circlePos[1] < 10) ydir = 10
 }
 
 function clearScreen(){
@@ -118,5 +107,20 @@ function checkScore(splitScore){
 		score.innerText = 'PLAYER 2 WINS!!';
 		clearInterval(game);
 		clearScreen();
+	}
+}
+
+function move(){
+	if(keys['w']){
+		if(player1Pos[1] > 0) player1Pos[1] -= 10;
+	}
+	if(keys['s']){
+		if(player1Pos[1] < height - rectHeight) player1Pos[1] += 10;
+	}
+	if(keys['ArrowUp']){
+		if(player2Pos[1] > 0) player2Pos[1] -= 10;
+	}
+	if(keys['ArrowDown']){
+		if(player2Pos[1] < height - rectHeight) player2Pos[1] += 10;
 	}
 }
